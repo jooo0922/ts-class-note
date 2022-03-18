@@ -23,3 +23,9 @@ function add(): number {
 function sum(a: number, b: number): number {
   return a + b;
 }
+
+// 함수의 파라미터 제한
+// ts 는 js와 반대로 정해진 개수 이상의 파라미터를 전달하면
+// 나머지 인자들에 대해서 불필요하게 4개의 인자를 넘겼다고 에러를 띄워버림.
+// 이런 식으로 js 에 비해 함수의 구조나 타입에 대해 엄격하게 체크해 줌.
+sum(10, 20, 30, 40);
