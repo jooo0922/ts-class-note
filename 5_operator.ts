@@ -24,7 +24,7 @@
  * 유니온 타입은 | (or) 연산자를 이용해서
  * 하나 이상의 타입을 동시에 허용하는 타입!
  */
-let sehoo: string | number | boolean; // 타입을 연산자로 연결한 만큼 지정할 수 있음.
+let seho2: string | number | boolean; // 타입을 연산자로 연결한 만큼 지정할 수 있음.
 function logMessage(value: string | number) {
   if (typeof value === "number") {
     // 이런식으로 타입을 분기했을 때 유니온 타입의 장점이 드러남.
@@ -84,9 +84,80 @@ function askSomeone(someone: Developer | Person2) {
    *
    * 각 인터페이스들의 공통된 속성,
    * 즉 보장된 속성에 대해서만 접근할 수 있도록 한 것임!
+   *
+   * 그니까 합집합이라기 보다는, 오히려 교집합으로 볼 수 있음.
    */
   someone.name;
   // 만약 someone.age, .skill 에도 접근하고 싶다면,
   // 위에서 분기를 사용해서 타입 가드를 적용한 것처럼
   // 특정 인터페이스로 타입의 범위를 좁혀놓은 뒤 접근할 수 있음!
 }
+
+/**
+ * 인터섹션 타입 (Intersection Type)
+ *
+ * 지정한 타입(특히, 인터페이스)들을 모두 만족하는
+ * 단 하나의 타입을 의미.
+ */
+let seho3: string | number | boolean;
+let capt: string & number & boolean;
+// capt는 never 타입으로 나옴.
+// 즉, string도 만족하고, number도 만족하고, boolean 도 만족하는
+// 단 하나의 타입을 의미하는 게 인터섹션 타입인데, 이런 건 존재할 수 없으니 never 로 뜨는 것.
+
+// 위와 같은 예시로는 인터섹션 타입이 잘 이해가 안되므로,
+// 인터페이스를 사용해서 예시로 만들어보기로 함.
+function askSomeone2(someone: Developer & Person2) {
+  // 여기서, someone 이 Developer 와 Person2 의 인터섹션 타입이다 라는 말의 의미는,
+  // "Developer 가 갖고있는 name과 skill, 그리고 Person2 가 갖고 있는 name과 age를 모두 포함한,
+  // 3개의 속성을 모두 갖는 하나의 타입이 바로 someone이다." 라는 뜻이고, 이런 걸 인터섹션 타입이라고 함!
+  someone.name;
+  someone.skill;
+  someone.age;
+
+  /**
+   * 아까 askSomeone 함수에서 유니온 타입을 사용했을 때에는,
+   * skill, age 속성을 바로 접근할 수 없기 때문에,
+   * 타입 가드에 대한 처리가 필요했음.
+   *
+   * 반면 askSomeone2 함수에서 인터섹션 타입을 사용했을 떄에는,
+   * 타입가드에 대한 별도의 처리가 필요 없더라도
+   * 바로 skill, age 속성에 접근할 수 있음.
+   *
+   * 그러나, 현실적으로 실무에서 더 많이 사용되는 타입은
+   * 유니온 타입을 더 많이 사용한다고 함!
+   */
+}
+
+/**
+ * 유니온 타입으로 지정한 함수 호출 예시
+ *
+ * 이렇게 Person2 규격, 또는 Developer 규격 중 하나로
+ * 인자를 전달하는 방식을 사용함.
+ *
+ * 이런 방식이 실무에서 가장 많이 사용하는
+ * 데이터에 따라 넘기는 방식
+ *
+ * 물론, 인터섹션 타입도 쓰이긴 하지만,
+ * '상대적으로' 유니온 타입이 실무에서는 더 많이 쓰인다고 함!
+ */
+askSomeone({ name: "디벨로퍼", skill: "웹 개발" });
+askSomeone({ name: "캡틴", age: 100 });
+
+/**
+ * 인터섹션 타입으로 지정한 함수 호출 예시
+ *
+ * 인터섹션 타입을 사용하는 함수는
+ * 두번째 줄 처럼 하나의 인터페이스 규격만 맞춰서 호출하면
+ * 에러가 나기 때문에,
+ *
+ * 첫번째 줄에서 쓴 것과 같이
+ * Developer 인터페이스와 Person2 인터페이스의 속성이
+ * 모두 담겨있는 새로운 타입을 지정해서 전달해줘야 함.
+ *
+ * 즉, 두 인터페이스의 속성을 모두 갖는,
+ * 두 인터페이스의 합집합으로 구성된
+ * 새로운 규격의 타입을 전달해준다고 보면 됨.
+ */
+askSomeone2({ name: "디벨로퍼", skill: "웹 개발", age: 34 });
+askSomeone2({ name: "캡틴", age: 100 }); // 인터섹션 타입은 하나의 인터페이스 규격에만 맞춰서 전달하면 안됨!
