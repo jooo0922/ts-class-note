@@ -92,3 +92,18 @@ const login = logText<boolean>(true); // 이렇게 동일한 함수인데 타입
 
 // logText("a");
 // logText(10);
+
+// 인터페이스에 제네릭을 선언하는 방법
+// 제네릭을 사용하지 않은 인터페이스
+interface Dropdown {
+  value: string;
+  selected: boolean;
+}
+const obj: Dropdown = { value: 10, selected: false }; // 제네릭을 사용하지 않은 인터페이스는 미리 정의된 타입이 아니라면 에러를 띄움.
+
+// 제네릭을 사용한 인터페이스
+interface Dropdown2<T> {
+  value: T;
+  selected: boolean;
+}
+const obj2: Dropdown2<string> = { value: "abc", selected: false }; // 제네릭을 사용한 인터페이스는 객체를 할당하는 시점에 원하는 타입을 바로 지정할 수 있음!
