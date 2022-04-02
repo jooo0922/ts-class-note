@@ -49,30 +49,46 @@
 // logText(true);
 
 // 위에 코드 중복의 문제점을 해소하기 위해 앞서 배웠던 유니온 타입을 사용할 수도 있음.
-function logText(text: string | number) {
-  // 이렇게 하면 하나의 동일한 함수에서 여러 타입을 인자로 받을 수 있게 됨.
-  console.log(text);
+// function logText(text: string | number) {
+//   이렇게 하면 하나의 동일한 함수에서 여러 타입을 인자로 받을 수 있게 됨.
+//   console.log(text);
+//
+//   /**
+//    * 그러나, 유니온 타입을 사용하면
+//    * 아래와 같은 문제점이 발생함.
+//    *
+//    * 즉, 함수 내에서 타입 가드 기법을 활용해서
+//    * 파라미터 타입에 대한 분기처리를 해주지 않으면
+//    *
+//    * split() 이런 것처럼 string 에서만 사용할 수 있는
+//    * api를 호출할 때 에러를 띄움.
+//    *
+//    * 왜냐? text 는 string일 수도 있지만,
+//    * number 일 수도 있잖아?
+//    *
+//    * 그럴 경우에는 split() 을 사용할 수 없기 때문에
+//    * 에러를 띄우게 되는 것임.
+//    */
+//   text.split("");
+//   return text;
+// }
 
-  /**
-   * 그러나, 유니온 타입을 사용하면
-   * 아래와 같은 문제점이 발생함.
-   *
-   * 즉, 함수 내에서 타입 가드 기법을 활용해서
-   * 파라미터 타입에 대한 분기처리를 해주지 않으면
-   *
-   * split() 이런 것처럼 string 에서만 사용할 수 있는
-   * api를 호출할 때 에러를 띄움.
-   *
-   * 왜냐? text 는 string일 수도 있지만,
-   * number 일 수도 있잖아?
-   *
-   * 그럴 경우에는 split() 을 사용할 수 없기 때문에
-   * 에러를 띄우게 되는 것임.
-   */
-  text.split("");
+// const a = logText("a");
+// a.split(""); // 얘도 마찬가지로, a 가 string일 지 number일 지 정확히 알 수 없기 때문에, split('') 같은 문자열 api를 사용하려고 하면 에러를 띄움.
+// logText(10);
+
+// 제네릭으로 위의 문제들을 해결하는 방법!
+// '<T>' 아래와 같이 꺽쇠표시를 통해 "이 함수를 호출할 때 어떤 타입을 받을거야, 제네릭을 쓸 거야" 라고 선언하는 것.
+// 그 다음에 ': T' 이렇게 해준 것들은 꺽쇠에 표시된 전달받을 타입을 파라미터에도 쓰고, 리턴값에도 쓰겠다는 뜻.
+function logText<T>(text: T): T {
+  console.log(text);
   return text;
 }
 
-const a = logText("a");
-a.split(""); // 얘도 마찬가지로, a 가 string일 지 number일 지 정확히 알 수 없기 때문에, split('') 같은 문자열 api를 사용하려고 하면 에러를 띄움.
-logText(10);
+// 이런 식으로 함수를 '호출'할 때 타입을 지정해서 전달하는 게 제네릭!
+const str = logText<string>("abc"); // str 값을 보면 string 으로 타입이 지정되어 있는 것을 볼 수 있음.
+str.split(""); // 문자열 api 인 split() 을 사용해도 에러가 나지 않음!
+const login = logText<boolean>(true); // 이렇게 동일한 함수인데 타입만 바꿔서 지정하여 호출할 수 있는 것이 제네릭의 장점!
+
+// logText("a");
+// logText(10);
