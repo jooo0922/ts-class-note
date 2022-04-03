@@ -6,28 +6,35 @@
  * 제네릭을 활용해서 정의해줘야 함!
  */
 
-// 먼저 반복적으로 사용되는 타입들은 interface 로 정리해놓자
-interface Email {
-  value: string;
+// 이제 인터페이스에서 제네릭을 사용하는 방법을 알았으니 하나의 인터페이스로
+// 제네릭을 사용하여 객체를 할당할 때마다 타입을 지정할 수 있음
+interface DropdownItem<T> {
+  value: T;
   selected: boolean;
 }
 
-const emails: Email[] = [
+// 먼저 반복적으로 사용되는 타입들은 interface 로 정리해놓자
+// interface Email {
+//   value: string;
+//   selected: boolean;
+// }
+
+const emails: DropdownItem<string>[] = [
   { value: "naver.com", selected: true },
   { value: "gmail.com", selected: false },
   { value: "hanmail.net", selected: false },
 ];
 
-interface ProductNumber {
-  value: number;
-  selected: boolean;
-}
+// interface ProductNumber {
+//   value: number;
+//   selected: boolean;
+// }
 
 // 만약에 boolean 값을 받는 드롭다운 메뉴가 있다면 interface 를 또 추가해야 됨.
-interface TrueFalse {
-  value: boolean;
-  selected: boolean;
-}
+// interface TrueFalse {
+//   value: boolean;
+//   selected: boolean;
+// }
 
 /**
  * 이런 식으로 향후에 어떤 타입이 오든 간에
@@ -36,13 +43,13 @@ interface TrueFalse {
  * 가져다 쓰도록 할 수 있음.
  */
 
-const numberOfProducts: ProductNumber[] = [
+const numberOfProducts: DropdownItem<number>[] = [
   { value: 1, selected: true },
   { value: 2, selected: false },
   { value: 3, selected: false },
 ];
 
-function createDropdownItem(item: Email | ProductNumber) {
+function createDropdownItem<T>(item: DropdownItem<T>) {
   const option = document.createElement("option");
   option.value = item.value.toString();
   option.innerText = item.value.toString();
@@ -52,7 +59,7 @@ function createDropdownItem(item: Email | ProductNumber) {
 
 // NOTE: 이메일 드롭 다운 아이템 추가
 emails.forEach(function (email) {
-  const item = createDropdownItem(email);
+  const item = createDropdownItem<string>(email);
   const selectTag = document.querySelector("#email-dropdown");
   selectTag.appendChild(item);
 });
