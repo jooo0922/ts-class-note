@@ -107,3 +107,52 @@ interface Dropdown2<T> {
   selected: boolean;
 }
 const obj2: Dropdown2<string> = { value: "abc", selected: false }; // 제네릭을 사용한 인터페이스는 객체를 할당하는 시점에 원하는 타입을 바로 지정할 수 있음!
+
+// 제네릭의 타입 제한
+// 참고로 리턴값은 굳이 T 라고 명시 안해줘도 TS 랭귀지 서버가 알아서 타입추론을 해주지만,
+// 명시를 해주는 게 가독성에도 좋고 제네릭의 문법을 잘 준수하는 방법이기 때문에 써놓는 게 좋음.
+function logTextLength<T>(text: T[]): T[] {
+  // T 에 어떤 타입이 들어올 지는 모르지만, .length, .forEach 등
+  // 배열 api 를 사용하고 싶다면, T[] 이런 식으로, T 타입이 들어가는 배열들이다 라고
+  // 힌트를 줌으로써, 내부적으로 배열 API를 사용해도 오류가 나지 않도록 할 수 있음. -> 이를 '제네릭 타입 제한' 이라고 함.
+  console.log(text.length);
+  text.forEach(function (text) {
+    console.log(text);
+  });
+  return text;
+}
+logTextLength<string>(["hi", "abc"]);
+
+// 제네릭 타입 제한 2 - 정의된 타입 이용하기 (extends(타입 상속) 사용)
+interface LengthType {
+  length: number;
+}
+
+// 인터페이스로 미리 정의해놓은 타입을 상속받으면,
+// 함수 내부에서 상속받은 타입 안에 존재하는 속성(length) 에 접근할 수 있음!
+function logTextLength2<T extends LengthType>(text: T): T {
+  text.length;
+  return text;
+}
+logTextLength2(10);
+logTextLength2({ leng: 10 });
+logTextLength2({ length: 10 }); // 위에처럼 쓰면 에러를 띄우고, 상속받은 타입을 포함하는 상태로 인자를 전달해야 에러를 띄우지 않음.
+// 이런 식으로 미리 정의된 인터페이스 타입을 이용해서도 제네릭 타입 제한을 해줄 수 있음.
+
+// 제네릭 타입 제한 3 - keyof
+interface ShoppingItem {
+  name: string;
+  price: number;
+  stock: number;
+}
+
+// 위에 정의해놓은 인터페이스 타입 안에 있는 name, price, stock 중 하나만 받겠다고 타입을 제한할 수 있음!
+function getShoppingItemOption<T extends keyof ShoppingItem>(itemOption: T): T {
+  // <T extends keyof ShoppingItem> 이런 식으로 제네릭을 정의하면
+  // '상속받은 ShoppingItem 인터페이스의 속성들(key값만! key에 할당된 타입 value가 아님!) 중 하나만 제네릭 타입으로 들어올 수 있다' 라고 타입을 제한하는 것임!
+  return itemOption;
+}
+getShoppingItemOption(10);
+getShoppingItemOption<string>("a"); // 이 두 줄은 호출할 때 넣어준 인자값이 ShoppingItem 의 속성들 중 하나가 아니므로, 제네릭 타입으로 넣어줄 수 없어서 에러를 띄움.
+getShoppingItemOption("name"); // 'key값만' 제네릭 타입 인자로 넣어줄 수 있음! {name: 'capt'} 이런 거 넣어줘도 에러가 남!
+// 즉, keyof 로 제네릭 타입을 제한하게 되면, ShoppingItem 같은 인터페이스의 key값들, 즉 'name', 'price', 'stock' 만 타입으로 넣어줄 수 있는 것임!
