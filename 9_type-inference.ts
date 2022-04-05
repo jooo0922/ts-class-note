@@ -49,3 +49,19 @@ let detailedItem: DetailedDropdown<string> = {
   value: "a",
   tag: "a",
 };
+
+// Best Common Type
+// 이거는 타입의 이름이 아니라, TS 가 해당 코드를 어떤 타입인지 매겨나가는 알고리즘이라고 보면 됨. 즉, 타입을 해석하는 방식!
+/**
+ * 아래의 배열과 같이,
+ * number, boolean, string 등 여러 타입 요소가 담긴
+ * 배열의 타입을 추론할 때,
+ *
+ * (number | boolean | string)[]
+ * 이런 식으로 |(or) 연산자를 활용해서
+ * 여러 타입을 묶어나가는 방식으로 타입을 추론하는 과정을
+ * Best Common Type(가장 근접한 타입을 추론함) 이라고 보면 됨.
+ *
+ * -> 쉽게 말하면 모든 타입을 유니온으로 묶어 나간다고 보면 됨.
+ */
+const arr = [1, 2, true, true, "a"];
