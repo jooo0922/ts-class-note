@@ -45,3 +45,21 @@ if ((tony as Developer).skill) {
 // 이런 타입 단언을 활용한 방식의 문제점은,
 // 조건문 뿐만 아니라 내부에서도 계속 as 키워드로 타입 단언을 해나가야 하므로,
 // 코드가 길어지고 가독성이 떨어지는 문제가 발생함.
+
+// 타입 가드
+// 타입 가드를 사용할 때에는 'is해당타입' 이라는 이름으로 작성된 함수 패턴이 주로 사용됨.
+// 이 함수의 인자는 Developer 또는 Person 타입을 가질테니까, 인자의 타입을 유니온 연산자로 지정해 줌.
+function isDeveloper(target: Developer | Person): target is Developer {
+  // 리턴값 타입을 지정할 때 사용하는 키워드 is 는
+  // 넘겨받은 파라미터가 실제로 해당 타입인지를 구분하는 키워드라고 보면 됨.
+  return (target as Developer).skill !== undefined; // 여기서 .skill 값이 있다면, undefined 가 아니므로 true를, 없다면 undefined 가 맞으므로 false 리턴하겠지
+  // 이런 식으로 target이 Developer 타입인지 아닌지 boolean 으로 알려주는 리턴 타입을 'is' 라는 키워드로 지정한 것!
+}
+
+if (isDeveloper(tony)) {
+  // 이렇게 타입 가드 패턴 함수를 이용해서 Developer 타입인지 여부를 체크하면
+  // 각 분기문 블록에서 .skill 과 .age 를 에러없이 접근할 수 있음! -> 위에 분기문보다 코드가 훨씬 더 가독성있고 깔끔해짐!
+  console.log(tony.skill);
+} else {
+  console.log(tony.age);
+}
